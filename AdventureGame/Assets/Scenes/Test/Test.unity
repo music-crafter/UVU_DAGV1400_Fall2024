@@ -436,6 +436,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1460203620}
   - component: {fileID: 1460203621}
+  - component: {fileID: 1460203622}
   m_Layer: 0
   m_Name: CharacterArt
   m_TagString: Untagged
@@ -510,6 +511,24 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &1460203622
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1460203619}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26b29e73a4a6c4841a323ae000fa3cfd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  keyRArrow: 275
+  keyLArrow: 276
+  keyA: 97
+  keyD: 100
+  direction1: 0
+  direction2: 180
 --- !u!1 &1894776888
 GameObject:
   m_ObjectHideFlags: 0
