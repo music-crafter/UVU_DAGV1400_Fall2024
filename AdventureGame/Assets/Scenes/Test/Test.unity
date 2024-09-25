@@ -265,8 +265,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.6413191, y: 0.64636403, z: 1}
-  m_Center: {x: 0.000033636607, y: 0.0008277438, z: 0}
+  m_Size: {x: 0.6413191, y: 0.64228207, z: 1}
+  m_Center: {x: 0.000033636607, y: -0.0012154906, z: 0}
 --- !u!212 &803388225
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -437,6 +437,8 @@ GameObject:
   - component: {fileID: 1460203620}
   - component: {fileID: 1460203621}
   - component: {fileID: 1460203622}
+  - component: {fileID: 1460203623}
+  - component: {fileID: 1460203624}
   m_Layer: 0
   m_Name: CharacterArt
   m_TagString: Untagged
@@ -453,7 +455,7 @@ Transform:
   m_GameObject: {fileID: 1460203619}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.39, y: 0.83, z: 0}
+  m_LocalPosition: {x: -0.02, y: 0.18, z: 0}
   m_LocalScale: {x: 5, y: 5, z: 5}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -529,6 +531,39 @@ MonoBehaviour:
   keyD: 100
   direction1: 0
   direction2: 180
+--- !u!95 &1460203623
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1460203619}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: f7675ac6ab2d7cb40a14e1a49a2ef4fd, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &1460203624
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1460203619}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9bfa60d0965073e42a56518947a64fb5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1894776888
 GameObject:
   m_ObjectHideFlags: 0
@@ -560,6 +595,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 5
+  jumpForce: 2
+  gravity: -9.81
 --- !u!143 &1894776890
 CharacterController:
   m_ObjectHideFlags: 0
@@ -583,9 +620,9 @@ CharacterController:
   m_Radius: 0.5
   m_SlopeLimit: 45
   m_StepOffset: 0.3
-  m_SkinWidth: 0.08
+  m_SkinWidth: 0.1
   m_MinMoveDistance: 0.001
-  m_Center: {x: -2.36, y: 0.63, z: 0}
+  m_Center: {x: 0, y: -0, z: 0}
 --- !u!4 &1894776891
 Transform:
   m_ObjectHideFlags: 0
