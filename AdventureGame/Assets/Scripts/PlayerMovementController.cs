@@ -6,24 +6,42 @@ public class PlayerMovementController : MonoBehaviour
     public Rigidbody2D rb;
     
     [Header ("Movement")]
-    public float moveSpeed = 5f;
+    public float moveSpeed = 7f;
+    
+    private bool isFacingRight = true;
+    private float horizontalMovement;
     
     [Header("Jump")]
-    public float jumpStrength = 2f;
+    public float jumpStrength = 15f;
     public int maxJumps = 2;
-    private int jumpsRemaining;
+    public int jumpsRemaining;
+    
+    [Header ("WallMovement")]
+    public float wallSlideSpeed = 5f;
+    public Vector2 wallJumpStrength = new Vector2(5f, 15f);
+    
+    public bool isWallSliding;
+    private bool isWallJumping;
+    private float wallJumpDirection;
+    private float wallJumpTime = 1f;
+    private float wallJumpTimer;
     
     [Header("Gravity")]
-    public float baseGravity = 2f;
-    public float maxFallSpeed = 1f;
+    public float baseGravity = 2.2f;
+    public float maxFallSpeed = 18f;
     public float fallSpeedMultiplier = 2f;
     
     [Header ("GroundCheck")]
     public Transform groundCheckPos;
     public Vector2 groundCheckSize = new Vector2(0.5f, 0.05f);
     public LayerMask groundLayer;
-
-    private float horizontalMovement;
+    
+    public bool grounded;
+    
+    [Header ("WallCheck")]
+    public Transform wallCheckPos;
+    public Vector2 wallCheckSize = new Vector2(0.5f, 0.05f);
+    public LayerMask wallLayer;
     
     private void Start()
     {
@@ -32,11 +50,18 @@ public class PlayerMovementController : MonoBehaviour
 
     private void Update()
     {
-        MoveCharacter();
+        WallSlide();
+        WallJump();
         GroundCheck();
         Gravity();
-    }
 
+        if (!isWallJumping)
+        {
+            MoveCharacter();
+            Flip();
+        }
+    }
+    
     public void Gravity()
     {
         if (rb.velocity.y < 0)
@@ -72,6 +97,25 @@ public class PlayerMovementController : MonoBehaviour
                 jumpsRemaining--;
             }
         }
+        
+        // Wall Jump
+        if (context.performed && wallJumpTimer > 0f)
+        {
+            isWallJumping = true;
+            rb.velocity = new Vector2(wallJumpDirection * wallJumpStrength.x, wallJumpStrength.y);
+            wallJumpTimer = 0;
+            
+            // Force flip
+            if (transform.localScale.x != wallJumpDirection)
+            {
+                isFacingRight = !isFacingRight;
+                Vector3 ls = transform.localScale;
+                ls.x *= -1;
+                transform.localScale = ls;
+            }
+            
+            Invoke(nameof(CancelWallJump), wallJumpTime);
+        }
     }
     
     private void MoveCharacter()
@@ -79,18 +123,75 @@ public class PlayerMovementController : MonoBehaviour
         // Horizontal
         rb.velocity = new Vector2(horizontalMovement * moveSpeed, rb.velocity.y);
     }
+
+    private void WallSlide()
+    {
+        if (!grounded && WallCheck() && horizontalMovement != 0)
+        {
+            rb.velocity = new Vector2(rb.velocity.x, Mathf.Max(rb.velocity.y, -wallSlideSpeed));
+            isWallSliding = true;
+        }
+        else
+        {
+            isWallSliding = false;
+        }
+    }
+
+    private void WallJump()
+    {
+        if (isWallSliding)
+        {
+            isWallJumping = false;
+            wallJumpDirection = -transform.localScale.x;
+            wallJumpTimer = wallJumpTime;
+            
+            CancelInvoke(nameof(CancelWallJump));
+        }
+        else if (wallJumpTimer > 0)
+        {
+            wallJumpTimer -= Time.deltaTime;
+        }
+    }
+
+    private void CancelWallJump()
+    {
+        isWallJumping = false;
+    }
+    
+    private void Flip()
+    {
+        if (isFacingRight && Input.GetAxis("Horizontal") < 0 || !isFacingRight && Input.GetAxis("Horizontal") > 0)
+        {
+            isFacingRight = !isFacingRight;
+            Vector3 ls = transform.localScale;
+            ls.x *= -1;
+            transform.localScale = ls;
+        }
+    }
     
     private void GroundCheck()
     {
         if (Physics2D.OverlapBox(groundCheckPos.position, groundCheckSize, 0f, groundLayer))
         {
             jumpsRemaining = maxJumps;
+            grounded = true;
         }
+        else
+        {
+            grounded = false;
+        }
+    }
+
+    private bool WallCheck()
+    {
+        return Physics2D.OverlapBox(wallCheckPos.position, wallCheckSize, 0f, wallLayer);
     }
 
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.white;
         Gizmos.DrawWireCube(groundCheckPos.position, groundCheckSize);
+        Gizmos.color = Color.blue;
+        Gizmos.DrawWireCube(wallCheckPos.position, wallCheckSize);
     }
 }

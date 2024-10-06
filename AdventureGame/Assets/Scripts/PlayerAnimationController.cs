@@ -1,71 +1,57 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class PlayerAnimationController : MonoBehaviour
 {
-    [Header ("Animation")]
+    public GameObject playerController;
+    public PlayerMovementController controller;
     public Rigidbody2D rb;
-    public Animator animator;
-    
-    [Header ("GroundCheck")]
-    public Transform groundCheckPos;
-    public Vector2 groundCheckSize = new Vector2(0.5f, 0.05f);
-    public LayerMask groundLayer;
-    
-    private bool isFacingRight = true;
-    private bool grounded;
+    private Animator animator;
     
     void Start()
     {
-
+        animator = GetComponent<Animator>();
+        controller = playerController.GetComponent<PlayerMovementController>();
+        rb = playerController.GetComponent<Rigidbody2D>();
     }
     
     void Update()
     {
-        HandleAnimations();
-        Flip();
-        GroundCheck();
+        HandleAnimations(controller.grounded, controller.isWallSliding, controller.maxJumps, controller.jumpsRemaining, rb);
     }
 
-    private void HandleAnimations()
+    private void HandleAnimations(bool grounded, bool isWallSliding, int maxJumps, int jumpsRemaining, Rigidbody2D rb)
     {
-        if (rb.velocity.y > 0.01 && Input.GetButtonDown("Jump")) // Jump & Fall
-        {
-            animator.SetTrigger("JumpTrigger");
-        } 
-        else if (rb.velocity.y < -0.01)
-        {
-            animator.SetTrigger("FallTrigger");
-        }
-        else if (rb.velocity.x != 0 && grounded) // Run & Idle
-        {
-            animator.SetTrigger("RunTrigger");
-        }
-        else if (rb.velocity.x == 0 && grounded)
+        // Idling & Running
+        if (Input.GetAxis("Horizontal") == 0 && grounded)
         {
             animator.SetTrigger("IdleTrigger");
         }
-    }
-    
-    private void Flip()
-    {
-        if (isFacingRight && Input.GetAxis("Horizontal") < 0 || !isFacingRight && Input.GetAxis("Horizontal") > 0)
+        else if (Input.GetAxis("Horizontal") != 0 && !isWallSliding && grounded)
         {
-            isFacingRight = !isFacingRight;
-            Vector3 ls = transform.localScale;
-            ls.x *= -1;
-            transform.localScale = ls;
+            animator.SetTrigger("RunTrigger");
         }
-    }
-    
-    private void GroundCheck()
-    {
-        if (Physics2D.OverlapBox(groundCheckPos.position, groundCheckSize, 0f, groundLayer))
+        
+        // Jumping & Double Jumping
+        if (Input.GetButtonDown("Jump") && !grounded)
         {
-            grounded = true;
+            animator.SetTrigger("DoubleJumpTrigger");
         }
-        else
+        else if (Input.GetButtonDown("Jump") && grounded)
         {
-            grounded = false;
+            animator.SetTrigger("JumpTrigger");
+        }
+        
+        // Wall Sliding
+        if (isWallSliding)
+        {
+            animator.SetTrigger("WallSlideTrigger");
+        }
+
+        // Falling
+        if (rb.velocity.y < -0.01)
+        {
+            animator.SetTrigger("FallTrigger");
         }
     }
 }
