@@ -5,7 +5,6 @@ using UnityEngine.UI;
 
 public class PlayerHealthUI : MonoBehaviour
 {
-
     public Image heart;
     public Sprite fullHeartSprite;
     public Sprite emptyHeartSprite;

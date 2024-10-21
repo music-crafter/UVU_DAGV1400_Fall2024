@@ -1,6 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class Trap : MonoBehaviour
 {
@@ -11,6 +10,7 @@ public class Trap : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("PlayerController"))
         {
+            HandleDamage(collision.gameObject, collision.GetComponent<PlayerHealthController>());
             HandlePlayerBounce(collision.gameObject);
         }
     }
@@ -18,14 +18,17 @@ public class Trap : MonoBehaviour
     private void HandlePlayerBounce(GameObject player)
     {
         Rigidbody2D rb = player.GetComponent<Rigidbody2D>();
+        
+        // Resets player y velocity
+        rb.velocity = new Vector2(rb.velocity.x, 0f);
+        
+        // Apply bounce force
+        rb.AddForce(Vector2.up * bounceForce, ForceMode2D.Impulse);
+    }
 
-        if (rb != null)
-        {
-            // Resets player y velocity
-            rb.velocity = new Vector2(rb.velocity.x, 0f);
-            
-            // Apply bounce force
-            rb.AddForce(Vector2.up * bounceForce, ForceMode2D.Impulse);
-        }
+    private void HandleDamage(GameObject player, PlayerHealthController playerHealthController)
+    {
+        playerHealthController = player.gameObject.GetComponent<PlayerHealthController>();
+        playerHealthController.Damage(damage);
     }
 }

@@ -4,20 +4,19 @@ using UnityEngine;
 
 public class PlayerHealthController : MonoBehaviour
 {
-    public int maxHealth = 3;
+    public SimpleIntData playerHealth;
     public PlayerHealthUI playerHealthUI;
     public GameObject characterArt;
-    private Animator animator;
     
-    private int currentHealth;
+    private Animator animator;
+    private int maxHealth;
     private float hitTimer;
     private float hitImmuneTime = 0.6f;
-    private bool hitImmune;
     
     void Start()
     {
-        currentHealth = maxHealth;
-        playerHealthUI.SetMaxHearts(maxHealth);
+        playerHealthUI.SetMaxHearts(playerHealth.maxValue);
+        playerHealthUI.UpdateHearts(playerHealth.currentValue);
         hitTimer = hitImmuneTime;
         animator = characterArt.GetComponent<Animator>();
         Apple.OnCollect += Heal;
@@ -25,7 +24,7 @@ public class PlayerHealthController : MonoBehaviour
 
     void Update()
     {
-        if (hitImmune)
+        if (playerHealth.pauseUpdates)
         {
             while (hitTimer >= 0)
             {
@@ -33,7 +32,7 @@ public class PlayerHealthController : MonoBehaviour
                 hitTimer -= Time.deltaTime;
                 if (hitTimer <= 0)
                 {
-                    hitImmune = false;
+                    playerHealth.pauseUpdates = false;
                     hitTimer = hitImmuneTime;
                     break;
                 }
@@ -41,33 +40,22 @@ public class PlayerHealthController : MonoBehaviour
         } 
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        Trap trap = collision.GetComponent<Trap>();
-
-        if (trap && trap.damage > 0 && !hitImmune)
-        {
-            Damage(trap.damage);
-        }
-    }
-
     private void Heal(int healAmount)
     {
-        currentHealth += healAmount;
-        if (currentHealth > maxHealth)
-        {
-            currentHealth = maxHealth;
-        }
-        playerHealthUI.UpdateHearts(currentHealth);
+        playerHealth.UpdateValue(healAmount);
+        playerHealthUI.UpdateHearts(playerHealth.currentValue);
     }
 
-    private void Damage(int damageAmount)
+    public void Damage(int damageAmount)
     {
-        currentHealth -= damageAmount;
-        playerHealthUI.UpdateHearts(currentHealth);
-        hitImmune = true;
+        if (!playerHealth.pauseUpdates)
+        {
+            playerHealth.UpdateValue(damageAmount);
+            playerHealthUI.UpdateHearts(playerHealth.currentValue);
+            playerHealth.pauseUpdates = true;   
+        }
 
-        if (currentHealth <= 0)
+        if (playerHealth.currentValue <= 0)
         {
             // Player is dead, call game over function
         }
