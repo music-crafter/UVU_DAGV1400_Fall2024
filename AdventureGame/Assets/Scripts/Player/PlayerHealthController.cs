@@ -12,6 +12,7 @@ public class PlayerHealthController : MonoBehaviour
     private int maxHealth;
     private float hitTimer;
     private float hitImmuneTime = 0.6f;
+    private bool startHitTimer;
     
     void Start()
     {
@@ -24,16 +25,16 @@ public class PlayerHealthController : MonoBehaviour
 
     void Update()
     {
-        if (playerHealth.pauseUpdates)
+        if (startHitTimer)
         {
             while (hitTimer >= 0)
             {
-                animator.SetTrigger("HitTrigger");
                 hitTimer -= Time.deltaTime;
                 if (hitTimer <= 0)
                 {
                     playerHealth.pauseUpdates = false;
                     hitTimer = hitImmuneTime;
+                    startHitTimer = false;
                     break;
                 }
             }
@@ -50,9 +51,11 @@ public class PlayerHealthController : MonoBehaviour
     {
         if (!playerHealth.pauseUpdates)
         {
+            animator.SetTrigger("HitTrigger");
             playerHealth.UpdateValue(damageAmount);
             playerHealthUI.UpdateHearts(playerHealth.currentValue);
-            playerHealth.pauseUpdates = true;   
+            playerHealth.pauseUpdates = true;
+            startHitTimer = true;
         }
 
         if (playerHealth.currentValue <= 0)

@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class Kiwi : MonoBehaviour, IItem
 {
+    public SimpleIntData playerMana;
     public int regenAmount = 2;
     public static event Action<int> OnCollect;
     
@@ -19,10 +20,12 @@ public class Kiwi : MonoBehaviour, IItem
     {
         animator.SetTrigger("CollectTrigger");
         OnCollect.Invoke(regenAmount);
+        playerMana.pauseUpdates = true;
     }
 
     public void OnCollectionFinish()
     {
+        playerMana.pauseUpdates = false;
         Destroy(gameObject);
     }
 }

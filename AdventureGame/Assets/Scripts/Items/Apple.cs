@@ -6,6 +6,7 @@ using UnityEngine;
 
 public class Apple : MonoBehaviour, IItem
 {
+    public SimpleIntData playerHealth;
     public int healAmount = 1;
     public static event Action<int> OnCollect;
     
@@ -20,10 +21,12 @@ public class Apple : MonoBehaviour, IItem
     {
         animator.SetTrigger("CollectTrigger");
         OnCollect.Invoke(healAmount);
+        playerHealth.pauseUpdates = true;
     }
 
     public void OnCollectionFinish()
     {
+        playerHealth.pauseUpdates = false;
         Destroy(gameObject);
     }
 }
