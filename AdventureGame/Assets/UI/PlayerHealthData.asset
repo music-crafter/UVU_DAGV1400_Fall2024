@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: PlayerHealthData
   m_EditorClassIdentifier: 
   maxValue: 5
-  currentValue: 3
+  currentValue: 5
   pauseUpdates: 0

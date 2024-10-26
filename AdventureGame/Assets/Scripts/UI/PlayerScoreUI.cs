@@ -10,15 +10,18 @@ public class PlayerScoreUI : MonoBehaviour
     public SimpleIntData playerScore;
     
     private TextMeshProUGUI text;
+    private Animator animator;
     
     void Start()
     {
         text = GetComponent<TextMeshProUGUI>();
+        animator = GetComponent<Animator>();
         UpdatePlayerScore();
     }
 
     public void UpdatePlayerScore()
     {
         text.text = playerScore.currentValue.ToString();
+        animator.SetTrigger("PlayerScoreTrigger");
     }
 }
