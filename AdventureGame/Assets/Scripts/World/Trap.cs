@@ -5,11 +5,19 @@ public class Trap : MonoBehaviour
 {
     public float bounceForce = 10f;
     public int damage = 1;
+    
+    private AudioSource audio;
 
+    private void Start()
+    {
+        audio = GetComponent<AudioSource>();
+    }
+    
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.CompareTag("PlayerController"))
         {
+            audio.Play();
             HandleDamage(collision.gameObject, collision.GetComponent<PlayerHealthController>());
             HandlePlayerBounce(collision.gameObject);
         }

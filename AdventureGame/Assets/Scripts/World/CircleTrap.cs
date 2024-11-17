@@ -8,9 +8,12 @@ public class CircleTrap : MonoBehaviour
     public int damage = -1;
 
     private Animator animator;
+    private AudioSource audio;
+    
     private void Start()
     {
         animator = GetComponent<Animator>();
+        audio = GetComponent<AudioSource>();
     }
 
     private void Update()
@@ -22,8 +25,9 @@ public class CircleTrap : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("PlayerController"))
         {
-            HandleDamage(collision.gameObject, collision.GetComponent<PlayerHealthController>());
             animator.SetTrigger("HitTrigger");
+            audio.Play();
+            HandleDamage(collision.gameObject, collision.GetComponent<PlayerHealthController>());
         }
     }
 

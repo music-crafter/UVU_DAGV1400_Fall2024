@@ -11,16 +11,19 @@ public class Banana : MonoBehaviour, IItem
     
     private PlayerScoreUI playerScoreUI;
     private Animator animator;
+    private AudioSource audio;
 
     void Start()
     {
         animator = GetComponent<Animator>();
         playerScoreUI = FindObjectOfType<PlayerScoreUI>();
+        audio = GetComponent<AudioSource>();
     }
 
     public void Collect()
     {
         animator.SetTrigger("CollectTrigger");
+        audio.Play();
         onCollect.Invoke();
         playerScoreUI.UpdatePlayerScore();
         playerScore.pauseUpdates = true;

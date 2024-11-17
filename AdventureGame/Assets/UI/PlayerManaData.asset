@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: PlayerManaData
   m_EditorClassIdentifier: 
   maxValue: 8
-  currentValue: 5
+  currentValue: 4
   pauseUpdates: 0

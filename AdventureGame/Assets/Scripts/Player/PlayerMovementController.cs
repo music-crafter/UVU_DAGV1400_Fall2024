@@ -5,6 +5,8 @@ public class PlayerMovementController : MonoBehaviour
 {
     public Rigidbody2D rb;
     
+    public AudioSource jumpAudioSource;
+    
     [Header ("Movement")]
     public float moveSpeed = 7f;
     
@@ -45,7 +47,7 @@ public class PlayerMovementController : MonoBehaviour
     
     private void Start()
     {
-
+        //jumpAudioSource = GetComponent<AudioSource>();
     }
 
     private void Update()
@@ -84,6 +86,7 @@ public class PlayerMovementController : MonoBehaviour
     {
         if (jumpsRemaining > 0)
         {
+            jumpAudioSource.Play();
             // Full height jump
             if (context.performed)
             {
@@ -101,6 +104,7 @@ public class PlayerMovementController : MonoBehaviour
         // Wall Jump
         if (context.performed && wallJumpTimer > 0f)
         {
+            jumpAudioSource.Play();
             isWallJumping = true;
             rb.velocity = new Vector2(wallJumpDirection * wallJumpStrength.x, wallJumpStrength.y);
             wallJumpTimer = 0;

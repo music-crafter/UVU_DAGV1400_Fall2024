@@ -10,15 +10,18 @@ public class Kiwi : MonoBehaviour, IItem
     public static event Action<int> OnCollect;
     
     private Animator animator;
+    private AudioSource audio;
 
     void Start()
     {
         animator = GetComponent<Animator>();
+        audio = GetComponent<AudioSource>();
     }
 
     public void Collect()
     {
         animator.SetTrigger("CollectTrigger");
+        audio.Play();
         OnCollect.Invoke(regenAmount);
         playerMana.pauseUpdates = true;
     }
