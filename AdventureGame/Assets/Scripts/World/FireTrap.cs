@@ -26,7 +26,7 @@ public class FireTrap : MonoBehaviour
     
     private void Update()
     {
-        if (Trigger())
+        if (Trigger()) // Can probably change to while loop
         {
             animator.SetBool("Active", true);
             HandleDamage(playerHealth);

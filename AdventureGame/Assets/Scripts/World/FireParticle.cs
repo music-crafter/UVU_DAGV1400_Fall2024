@@ -16,6 +16,23 @@ public class FireParticle : MonoBehaviour
     {
         particleSystem = GetComponent<ParticleSystem>();
     }
-    
-    //private void OnTriggerEnter2D(Collider2D collision)
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.CompareTag("PlayerController"))
+        {
+            StartCoroutine(EmitParticleCoroutine());
+        }
+    }
+
+    private IEnumerator EmitParticleCoroutine()
+    {
+        particleSystem.Emit(triggerEmissionAmount);
+        yield return new WaitForSeconds(emissionDelay);
+        
+        particleSystem.Emit(fireEmissionAmount);
+        yield return new WaitForSeconds(emissionDelay);
+        
+        particleSystem.Emit(smokeEmissionAmount);
+    }
 }
