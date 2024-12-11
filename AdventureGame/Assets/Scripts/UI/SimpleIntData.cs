@@ -16,6 +16,10 @@ public class SimpleIntData : ScriptableObject
             {
                 currentValue = maxValue;
             }
+            else if (currentValue < 0)
+            {
+                currentValue = 0;
+            }
         }
     }
 
