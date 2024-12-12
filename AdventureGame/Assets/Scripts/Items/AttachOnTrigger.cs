@@ -4,8 +4,11 @@ using UnityEngine;
 
 public class AttachOnTrigger : MonoBehaviour
 {
-    public void OnTriggerEnter2D(Collider other)
+    public void OnTriggerEnter2D(Collider2D other)
     {
-        transform.parent = other.transform;
+        if (other.CompareTag("PlayerController"))
+        {
+            transform.parent = other.transform;
+        }
     }
 }

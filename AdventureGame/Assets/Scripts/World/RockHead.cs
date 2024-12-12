@@ -6,26 +6,24 @@ using UnityEngine.Events;
 public class RockHead : MonoBehaviour
 {
     public ID id;
-    public UnityEvent onMatch, onNoMatch;
-
+    public UnityEvent onMatch, onNoMatch, destroy;
+    
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        var collisionID = collision.GetComponent<SimpleIdBehavior>();
-
-        if (collisionID.id != id)
+        if (collision.GetComponent<SimpleIdBehavior>() != null)
         {
-            Debug.Log("Failed to Match ID: " + id);
-            onNoMatch.Invoke();
+            var collisionID = collision.GetComponent<SimpleIdBehavior>();
+
+            if (collisionID.id == id)
+            {
+                //Debug.Log("Matched ID: " + id);
+                onMatch.Invoke();
+            }
         }
         else
         {
-            Debug.Log("Matched ID: " + id);
-            onMatch.Invoke();
+            //Debug.Log("Failed to Match ID: " + id);
+            onNoMatch.Invoke();
         }
-    }
-    
-    public void OnDestructionFinish()
-    {
-        Destroy(gameObject);
     }
 }
