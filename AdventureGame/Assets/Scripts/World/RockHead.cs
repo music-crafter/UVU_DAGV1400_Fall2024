@@ -6,7 +6,7 @@ using UnityEngine.Events;
 public class RockHead : MonoBehaviour
 {
     public ID id;
-    public UnityEvent onMatch, onNoMatch, destroy;
+    public UnityEvent onMatch, onNoMatch;
     
     private void OnTriggerEnter2D(Collider2D collision)
     {
